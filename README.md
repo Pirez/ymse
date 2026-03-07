@@ -1,6 +1,6 @@
 # ymse
 
-Send transactional email via [Lettermint](https://lettermint.co).
+Misc utilities: transactional email via [Lettermint](https://lettermint.co) and Doffin procurement search.
 
 ## Install
 
@@ -8,7 +8,9 @@ Send transactional email via [Lettermint](https://lettermint.co).
 uv add ymse
 ```
 
-## Setup
+## Email
+
+### Setup
 
 Create a `.env` file:
 
@@ -19,7 +21,7 @@ LETTERMINT_SENDER=Your Name <you@yourdomain.com>
 
 The sender address must be a verified sender in your Lettermint account.
 
-## Usage
+### Usage
 
 ```python
 from ymse.core import send_email
@@ -41,6 +43,28 @@ send_email(
     sender="Other Name <other@yourdomain.com>",
 )
 ```
+
+## Doffin
+
+Search Norwegian public procurement notices ([doffin.no](https://doffin.no)).
+
+### Setup
+
+```
+DOFFIN_API_KEY=your_subscription_key
+```
+
+### Usage
+
+```python
+from ymse import search_doffin
+
+notices = search_doffin("IT-tjenester", days=7)
+# or multiple queries
+notices = search_doffin(["IT-tjenester", "renholdsutstyr"], days=30)
+```
+
+Each result dict contains: `id`, `title`, `description`, `buyer`, `type`, `published`, `value`, `currency`, `url`, `query`.
 
 ## Dev
 
