@@ -5,7 +5,7 @@ import requests
 from dotenv import load_dotenv
 from loguru import logger
 
-BASE_URL = "https://api.doffin.no/public/v2"
+DEFAULT_BASE_URL = "https://api.doffin.no/public/v2"
 
 
 def search_doffin(
@@ -27,6 +27,7 @@ def search_doffin(
     load_dotenv()
     if api_key is None:
         api_key = os.environ["DOFFIN_API_KEY"]
+    base_url = os.environ.get("DOFFIN_BASE_URL", DEFAULT_BASE_URL)
     if isinstance(queries, str):
         queries = [queries]
     published_after = (datetime.today() - timedelta(days=days)).strftime("%Y-%m-%d")
@@ -55,7 +56,7 @@ def search_doffin(
                 params["type"] = notice_type
 
             r = requests.get(
-                f"{BASE_URL}/search", params=params, headers=headers, timeout=15
+                f"{base_url}/search", params=params, headers=headers, timeout=15
             )
             r.raise_for_status()
             data = r.json()
