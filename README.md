@@ -1,5 +1,8 @@
 # ymse
 
+[![PyPI](https://img.shields.io/pypi/v/ymse)](https://pypi.org/project/ymse/)
+[![Coverage](https://img.shields.io/badge/coverage-89%25-brightgreen)](https://github.com/Pirez/ymse)
+
 Misc utilities: transactional email via [Lettermint](https://lettermint.co) and Doffin procurement search.
 
 ## Install
