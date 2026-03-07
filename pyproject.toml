@@ -10,6 +10,7 @@ dependencies = [
     "lettermint",
     "loguru",
     "python-dotenv",
+    "requests",
 ]
 
 [tool.hatch.build.targets.wheel]
