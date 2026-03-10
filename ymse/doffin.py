@@ -5,7 +5,7 @@ import requests
 from dotenv import load_dotenv
 from loguru import logger
 
-DEFAULT_BASE_URL = "https://api.doffin.no/public/v2"
+DEFAULT_BASE_URL = "https://api.doffin.no/public/v2/"
 
 
 def search_doffin(
@@ -15,7 +15,7 @@ def search_doffin(
     status: str = "",
     notice_type: str = "",
     page_size: int = 100,
-    max_results: int = 500,
+    max_results: int = 100,
 ) -> list[dict]:
     """
     Search Doffin for notices published within the last `days` days.
@@ -46,8 +46,9 @@ def search_doffin(
         while fetched < max_results:
             params = {
                 "page": page,
-                "numHitsPerPage": page_size,
+                "numHitsPerPage": 100,
                 "searchString": query,
+                "sortBy": "PUBLICATION_DATE_DESC",
                 "issueDateFrom": published_after,
             }
             if status:
@@ -107,3 +108,12 @@ def search_doffin(
         )
 
     return results
+
+
+if __name__ == "__main__":
+    # Quick test
+    notices = search_doffin("maskinlæring", days=31, max_results=100)
+    for n in notices:
+        print(
+            f"{n['published']} | {n['title']} | {n['buyer']} | {n['type']} | {n['value']} {n['currency']} | {n['url']}"
+        )
