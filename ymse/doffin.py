@@ -19,12 +19,20 @@ def search_doffin(
     page_size: int = 100,
     max_results: int = 100,
 ) -> list[dict]:
-    """Search Doffin for notices published within the last `days` days.
+    """Search Doffin for recent notices and return a flat list of notice dicts.
 
-    Accepts one or multiple queries; returns a combined flat list of notice dicts.
-    Each dict contains: id, title, description, buyer, type, published,
-    value, currency, url, query.
-    API key is read from DOFFIN_API_KEY env var if not provided.
+    Each dict has: id, title, description, buyer, type, published, value,
+    currency, url, query.
+
+    :param queries: One search string or a list of them.
+    :param days: Only include notices published within the last `days` days.
+    :param api_key: Doffin subscription key; defaults to the DOFFIN_API_KEY env var.
+    :param status: Optional notice status filter.
+    :param notice_type: Optional notice type filter.
+    :param page_size: Hits per page, used to detect the last page.
+    :param max_results: Maximum notices to return per query.
+    :raises KeyError: If no API key is given and DOFFIN_API_KEY is unset.
+    :raises requests.HTTPError: On a non-2xx response.
     """
     load_dotenv()
     if api_key is None:

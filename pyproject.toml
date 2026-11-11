@@ -27,7 +27,7 @@ dev = [
 extend-select = ["D"]
 
 [tool.ruff.lint.pydocstyle]
-convention = "google"
+convention = "pep257"
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["D"]

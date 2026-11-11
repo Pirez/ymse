@@ -22,19 +22,15 @@ def send_email(
 ) -> None:
     """Send an HTML email via Lettermint.
 
-    Args:
-        subject: Email subject line.
-        html_content: HTML body.
-        to: Recipient address.
-        sender: Verified sender; defaults to the LETTERMINT_SENDER env var.
-
-    Raises:
-        KeyError: If LETTERMINT_API_TOKEN (or LETTERMINT_SENDER when no sender is
-            given) is not set.
-        ValidationError: On a 422 response.
-        ClientError: On a 400 response.
-        TimeoutError: If the request times out.
-        HttpRequestError: On any other HTTP error.
+    :param subject: Email subject line.
+    :param html_content: HTML body.
+    :param to: Recipient address.
+    :param sender: Verified sender; defaults to the LETTERMINT_SENDER env var.
+    :raises KeyError: If LETTERMINT_API_TOKEN (or LETTERMINT_SENDER) is unset.
+    :raises ValidationError: On a 422 response.
+    :raises ClientError: On a 400 response.
+    :raises TimeoutError: If the request times out.
+    :raises HttpRequestError: On any other HTTP error.
     """
     sender = sender or os.environ["LETTERMINT_SENDER"]
     client = Lettermint(api_token=os.environ["LETTERMINT_API_TOKEN"])
