@@ -1,8 +1,10 @@
+import runpy
 from unittest.mock import MagicMock, patch
 
 import pytest
 import requests
 
+from ymse import doffin
 from ymse.doffin import search_doffin
 
 
@@ -127,3 +129,24 @@ def test_max_results_cap(mock_get):
 
     assert len(results) == 25
     assert mock_get.call_count == 3
+
+
+@patch("ymse.doffin.requests.get")
+def test_status_and_notice_type_params(mock_get):
+    mock_get.return_value = _make_response([])
+
+    search_doffin("query", api_key="k", status="ACTIVE", notice_type="COMPETITION")
+
+    params = mock_get.call_args[1]["params"]
+    assert params["status"] == "ACTIVE"
+    assert params["type"] == "COMPETITION"
+
+
+@patch("ymse.doffin.requests.get")
+def test_main_block_prints_results(mock_get, monkeypatch, capsys):
+    monkeypatch.setenv("DOFFIN_API_KEY", "test-key")
+    mock_get.return_value = _make_response([SAMPLE_HIT])
+
+    runpy.run_path(doffin.__file__, run_name="__main__")
+
+    assert "Test Notice" in capsys.readouterr().out

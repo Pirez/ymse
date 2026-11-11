@@ -1,3 +1,5 @@
+"""Search Norwegian public procurement notices on Doffin."""
+
 import os
 from datetime import datetime, timedelta
 
@@ -17,8 +19,8 @@ def search_doffin(
     page_size: int = 100,
     max_results: int = 100,
 ) -> list[dict]:
-    """
-    Search Doffin for notices published within the last `days` days.
+    """Search Doffin for notices published within the last `days` days.
+
     Accepts one or multiple queries; returns a combined flat list of notice dicts.
     Each dict contains: id, title, description, buyer, type, published,
     value, currency, url, query.

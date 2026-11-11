@@ -1,3 +1,5 @@
+"""Misc utilities: Lettermint email and Doffin procurement search."""
+
 from .core import run
 from .doffin import search_doffin
 

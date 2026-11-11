@@ -1,3 +1,5 @@
+"""Transactional email via Lettermint."""
+
 import os
 from lettermint import Lettermint
 from lettermint.exceptions import (
@@ -18,6 +20,22 @@ def send_email(
     to: str,
     sender: str | None = None,
 ) -> None:
+    """Send an HTML email via Lettermint.
+
+    Args:
+        subject: Email subject line.
+        html_content: HTML body.
+        to: Recipient address.
+        sender: Verified sender; defaults to the LETTERMINT_SENDER env var.
+
+    Raises:
+        KeyError: If LETTERMINT_API_TOKEN (or LETTERMINT_SENDER when no sender is
+            given) is not set.
+        ValidationError: On a 422 response.
+        ClientError: On a 400 response.
+        TimeoutError: If the request times out.
+        HttpRequestError: On any other HTTP error.
+    """
     sender = sender or os.environ["LETTERMINT_SENDER"]
     client = Lettermint(api_token=os.environ["LETTERMINT_API_TOKEN"])
 
@@ -43,6 +61,7 @@ def send_email(
 
 
 def run() -> None:
+    """Send a hardcoded test email to verify the Lettermint setup."""
     send_email(
         subject="Testing automated email sending with Lettermint",
         html_content="Functionality is working! This email was sent using the Lettermint SDK.",

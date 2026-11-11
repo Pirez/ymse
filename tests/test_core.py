@@ -1,7 +1,12 @@
 from unittest.mock import MagicMock, patch
 import pytest
-from lettermint.exceptions import ValidationError, TimeoutError
-from ymse.core import send_email
+from lettermint.exceptions import (
+    ClientError,
+    HttpRequestError,
+    TimeoutError,
+    ValidationError,
+)
+from ymse.core import run, send_email
 
 
 @pytest.fixture
@@ -44,3 +49,31 @@ def test_send_email_missing_token(monkeypatch):
         send_email(
             "Subject", "<p>Hello</p>", "to@example.com", "From <from@example.com>"
         )
+
+
+def test_send_email_client_error(mock_client):
+    mock_client.send.side_effect = ClientError("bad request")
+    with pytest.raises(ClientError):
+        send_email(
+            "Subject", "<p>Hello</p>", "to@example.com", "From <from@example.com>"
+        )
+
+
+def test_send_email_http_error(mock_client):
+    mock_client.send.side_effect = HttpRequestError("server error", 500)
+    with pytest.raises(HttpRequestError):
+        send_email(
+            "Subject", "<p>Hello</p>", "to@example.com", "From <from@example.com>"
+        )
+
+
+def test_send_email_default_sender(mock_client, monkeypatch):
+    monkeypatch.setenv("LETTERMINT_SENDER", "Env <env@example.com>")
+    send_email("Subject", "<p>Hello</p>", "to@example.com")
+    mock_client.send.assert_called_once()
+
+
+def test_run_sends_email():
+    with patch("ymse.core.send_email") as mock_send:
+        run()
+    mock_send.assert_called_once()
